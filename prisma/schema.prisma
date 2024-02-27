@@ -19,12 +19,12 @@ model product {
   brand        String      @db.VarChar(255)
   restocked_at DateTime    @default(now()) @db.Date
   expired_at   DateTime    @db.Date
-  menu         menu        @relation(fields: [menu_id], references: [id])
-  menu_id      String      @db.Char(4)
+  label        label       @relation(fields: [label_id], references: [id])
+  label_id     String      @db.Char(4)
   variant      variant[]
 }
 
-model menu {
+model label {
   id        String      @id @db.Char(4)
   name      String      @db.VarChar(255)
   spot      spot        @relation(fields: [spot_id], references: [id])  
@@ -36,5 +36,5 @@ model spot {
   id      String  @id @db.Char(4)
   index   Int     @unique
   note    String?
-  menu    menu[]
+  label    label[]
 }

@@ -13,18 +13,18 @@ CREATE TABLE "product" (
     "brand" VARCHAR(255) NOT NULL,
     "restocked_at" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "expired_at" DATE NOT NULL,
-    "menu_id" CHAR(4) NOT NULL,
+    "label_id" CHAR(4) NOT NULL,
 
     CONSTRAINT "product_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "menu" (
+CREATE TABLE "label" (
     "id" CHAR(4) NOT NULL,
     "name" VARCHAR(255) NOT NULL,
     "spot_id" CHAR(4) NOT NULL,
 
-    CONSTRAINT "menu_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "label_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -43,7 +43,7 @@ CREATE UNIQUE INDEX "spot_index_key" ON "spot"("index");
 ALTER TABLE "variant" ADD CONSTRAINT "variant_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "product" ADD CONSTRAINT "product_menu_id_fkey" FOREIGN KEY ("menu_id") REFERENCES "menu"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "product" ADD CONSTRAINT "product_label_id_fkey" FOREIGN KEY ("label_id") REFERENCES "label"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "menu" ADD CONSTRAINT "menu_spot_id_fkey" FOREIGN KEY ("spot_id") REFERENCES "spot"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "label" ADD CONSTRAINT "label_spot_id_fkey" FOREIGN KEY ("spot_id") REFERENCES "spot"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
