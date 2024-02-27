@@ -7,34 +7,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model variant {
-  id          String    @id @db.Char(4)
+  id                String              @id @db.Char(4)
+  contains          String              @db.VarChar(20)
+  variant_product   variant_product[]
+}
+
+model variant_product {
+  id          String    @id @db.Char(5)
   contains    String    @db.VarChar(255)
   product     product   @relation(fields: [product_id], references: [id])
   product_id  String    @db.Char(4) 
+  variant     variant   @relation(fields: [variant_id], references: [id])
+  variant_id  String    @db.Char(4)
 }
 
 model product {
-  id           String      @id @db.Char(4)
-  brand        String      @db.VarChar(255)
-  restocked_at DateTime    @default(now()) @db.Date
-  expired_at   DateTime    @db.Date
-  label        label       @relation(fields: [label_id], references: [id])
-  label_id     String      @db.Char(4)
-  variant      variant[]
+  id                String              @id @db.Char(4)
+  brand             String              @db.VarChar(255)
+  restocked_at      DateTime            @default(now()) @db.Date
+  expired_at        DateTime            @db.Date
+  spot_menu         spot_menu           @relation(fields: [spot_menu_id], references: [id])
+  spot_menu_id      String              @db.Char(5)
+  variant_product   variant_product[]
 }
 
-model label {
-  id        String      @id @db.Char(4)
-  name      String      @db.VarChar(255)
+model menu {
+  id         String       @id @db.Char(4)
+  name       String       @db.VarChar(20)
+  spot_menu  spot_menu[]
+}
+
+model spot_menu {
+  id        String      @id @db.Char(5)
   spot      spot        @relation(fields: [spot_id], references: [id])  
   spot_id   String      @db.Char(4)  
+  menu      menu        @relation(fields: [menu_id], references: [id])
+  menu_id   String      @db.Char(4)
   product   product[]
 }
 
 model spot {
-  id      String  @id @db.Char(4)
-  index   Int     @unique
-  note    String?
-  label    label[]
+  id          String      @id @db.Char(4)
+  index       Int     
+  note        String?
+  spot_menu   spot_menu[]
 }
