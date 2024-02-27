@@ -9,7 +9,6 @@ CREATE TABLE "variant" (
 -- CreateTable
 CREATE TABLE "variant_product" (
     "id" CHAR(5) NOT NULL,
-    "contains" VARCHAR(255) NOT NULL,
     "product_id" CHAR(4) NOT NULL,
     "variant_id" CHAR(4) NOT NULL,
 
@@ -19,7 +18,7 @@ CREATE TABLE "variant_product" (
 -- CreateTable
 CREATE TABLE "product" (
     "id" CHAR(4) NOT NULL,
-    "brand" VARCHAR(255) NOT NULL,
+    "brand" VARCHAR(50) NOT NULL,
     "restocked_at" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "expired_at" DATE NOT NULL,
     "spot_menu_id" CHAR(5) NOT NULL,

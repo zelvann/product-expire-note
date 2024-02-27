@@ -16,7 +16,6 @@ model variant {
 
 model variant_product {
   id          String    @id @db.Char(5)
-  contains    String    @db.VarChar(255)
   product     product   @relation(fields: [product_id], references: [id])
   product_id  String    @db.Char(4) 
   variant     variant   @relation(fields: [variant_id], references: [id])
@@ -25,7 +24,7 @@ model variant_product {
 
 model product {
   id                String              @id @db.Char(4)
-  brand             String              @db.VarChar(255)
+  brand             String              @db.VarChar(50)
   restocked_at      DateTime            @default(now()) @db.Date
   expired_at        DateTime            @db.Date
   spot_menu         spot_menu           @relation(fields: [spot_menu_id], references: [id])
