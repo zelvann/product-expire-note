@@ -1,6 +1,6 @@
 import db from "@/config/init";
 
-const _delete = async(id: string) => {
+const _delete = (id: string) => {
   return db.product.deleteMany({
     where: {
       id
