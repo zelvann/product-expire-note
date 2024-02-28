@@ -22,10 +22,10 @@ const handler = async(req: NextApiRequest, res: NextApiResponse<ResponseData>) :
         })
       }
     }
-    // http://localhost:3000/api/list/product/delete
+    // http://localhost:3000/api/list/product/delete/[id]
     else if(req.query.list[2] === 'delete') {
       try {
-        const result = await _delete();
+        const result = await _delete(req.query.list[3]);
         res.status(201).json({
           message: 'Produk telah berhasil dihapus',
           data: result

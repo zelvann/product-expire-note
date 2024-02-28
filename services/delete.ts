@@ -1,9 +1,9 @@
 import db from "@/config/init";
 
-const _delete = async() => {
+const _delete = async(id: string) => {
   return db.product.deleteMany({
     where: {
-      restocked_at: new Date('2024-02-28')
+      id
     }
   });
 }
