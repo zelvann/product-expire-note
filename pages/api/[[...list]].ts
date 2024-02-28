@@ -5,6 +5,7 @@ import _delete from "@/services/delete";
 import _update from "@/services/update";
 import product_variant from "@/services/product";
 import query from "@/services/list";
+import _expired from "@/services/expired";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) : Promise<void> => {
   if(req.query.list && req.method === 'POST') {
@@ -62,9 +63,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
       })
     }
   }
-  // http://localhost:3000/api/list/product/detail/[product.id]
-  else if(req.query.list && req.method != 'POST' && req.query.list.length === 4) {
-    if(req.query.list[1] === 'product' && req.query.list[2] === 'detail') {
+  else if(req.query.list && req.method === 'GET') {
+    // http://localhost:3000/api/list/product/detail/[product.id]
+    if(req.query.list.length === 4 && req.query.list[1] === 'product' && req.query.list[2] === 'detail') {
       try {
         const result = await product_variant(req.query.list[3]);
         res.status(200).json({
@@ -78,24 +79,41 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
           error_info: error
         })
       }
+    } 
+    // http://localhost:3000/api/list/product/filter
+    else if(req.query.list[1] === 'product' && req.query.list[2] === 'filter') {
+      try {
+        const result = await _expired();
+        res.status(200).json({
+          message: 'berhasil mengambil data berdasarkan tanggal expire',
+          data: result
+        })
+      } catch(error) {
+        // console.error(error);
+        res.status(500).json({
+          message: 'gagal mengambil data berdasarkan tanggal expire',
+          error_info: error
+        })
+      }
+    } 
+    // http://localhost:3000/api/list
+    else if(req.query.list[0] === 'list') {
+      try {
+        const result = await query();
+        res.status(200).json({
+          message: 'berhasil mengambil data',
+          data: result
+        })
+      } catch (error) {
+        // console.error(error);
+        res.status(500).json({
+          message: 'gagal mengambil data',
+          error_info: error
+        })
+      }
     } else {
       res.status(404).json({
         message: 'Error'
-      })
-    }
-  }
-  // http://localhost:3000/api/list/
-  else if(req.query.list && req.query.list.length === 1) {
-    try {
-      const result = await query();
-      res.status(200).json({
-        message: 'berhasil mengambil data',
-        data: result
-      })
-    } catch (error) {
-      res.status(500).json({
-        message: 'gagal mengambil data',
-        error_info: error
       })
     }
   }
