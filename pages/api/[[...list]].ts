@@ -8,10 +8,10 @@ import query from "@/services/list";
 import _expired from "@/services/expired";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) : Promise<void> => {
-  if(req.query.list && req.method === 'POST') {
+  if(req.query.list && req.method !== 'GET') {
     // http://localhost:3000/api/list/product/create
-    if(req.query.list[2] === 'create') {
-      const attribute: _product = req.body;
+    const attribute: _product = req.body;
+    if(req.method === 'POST' && req.query.list[2] === 'create') {
       try {
         const result = await _create(attribute);
         res.status(201).json({
@@ -27,7 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
       }
     }
     // http://localhost:3000/api/list/product/delete/[id]
-    else if(req.query.list[2] === 'delete') {
+    else if(req.method === 'DELETE' && req.query.list[2] === 'delete') {
       try {
         const result = await _delete(req.query.list[3]);
         res.status(201).json({
@@ -43,9 +43,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
       }
     }
     // http://localhost:3000/api/list/product/update/[id]
-    else if(req.query.list[2] === 'update') {
+    else if(req.method === 'PUT' && req.query.list[2] === 'update') {
       try {
-        const result = await _update(req.query.list[3]);
+        const result = await _update(req.query.list[3], attribute);
         res.status(201).json({
           message: 'Produk telah berhasil diupdate',
           data: result
