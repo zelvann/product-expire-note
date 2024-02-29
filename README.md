@@ -1,40 +1,107 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Product Expire Note Rest API
 
-## Getting Started
+This is an implementation of API for a Product Expire Note Application using `Next.js`,`Prisma` as an ORM, and `PostgreSQL` as the database
 
-First, run the development server:
+## How to Use
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 1. Clone this repository
+
+```
+git clone https://github.com/zelvann/product-expire-note-api.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```
+cd product-expire-api
+npm install
+```
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### 3. Create the environment variables
+To run this project, Please make .env file inside the root of folder
+```env
+// .env.example
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA"
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### 4. Push the prisma schema state to the database
+```
+npx prisma db push
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+This is an ERD for the database
+#### CDM
+![CDM](public/product_expire_cdm.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+#### PDM
+![PDM](public/product_expire_pdm.png)
 
-## Learn More
+### 5. Insert the data to database (optional)
+You can use this [Dummy Data](https://itsacid-my.sharepoint.com/:x:/g/personal/5025221125_student_its_ac_id/EWl1P9VgizRFuTQZGdKunIEBoCWY3_7OZWw-64BvG4XQlg?rtime=bPwpOBs53Eg) for inserting data to database
 
-To learn more about Next.js, take a look at the following resources:
+### 6. Start the app
+```
+npm run dev
+```
+The app is now running, navigate to [`http://localhost:3000/`](http://localhost:3000/) and redirect to [`http://localhost:3000/api/list`](http://localhost:3000/api/list)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Using the REST API
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+You can also access the REST API via `postman` or `curl` or via client browser directly.
 
-## Deploy on Vercel
+### `GET`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `/api/list/product/detail/[product.id]` : Get information about product by ID
+- `/api/list/product/filter` : Filter product based on expire_date order by ascending
+- `/api/list` : Get all product detail including spot, menu, and variant
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```
+// example of product which ID is P001
+curl --location 'http://localhost:3000/api/list/product/detail/P001'
+
+curl --location 'http://localhost:3000/api/list/product/filter'
+
+curl --location 'http://localhost:3000/api/list'
+```
+
+### `POST`
+
+- `/api/list/product/create` : Add new product uses new ID and spot_menu_id which is existed at spot table
+
+```
+// dummy data
+curl --location 'http://localhost:3000/api/list/product/create' \
+--header 'Content-Type: application/json' \
+--data '{
+    "id": "P017",
+    "brand": "chitato",
+    "expired_at": "2024-06-10",
+    "spot_menu_id": "SM002"
+}'
+```
+
+### `PUT`
+
+- `/api/list/product/update/[product.id]` : Update product attribute by ID
+
+```
+// dummy data
+curl --location --request PUT 'http://localhost:3000/api/list/product/update/P017' \
+--header 'Content-Type: application/json' \
+--data '{
+    "id":"P017",
+    "brand": "chitato",
+    "restocked_at": "2024-02-29",
+    "expired_at": "2024-12-29",
+    "spot_menu_id": "SM001"
+}
+```
+
+### `DELETE`
+
+- `/api/list/product/delete/[product.id]` : Delete product by ID
+
+```
+curl --location --request DELETE 'http://localhost:3000/api/list/product/delete/P017'
+```
+
+Please read this [API Docs](https://its.id/m/apidoc) for more detail about this API via `postman` with example of request and response
