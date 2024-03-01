@@ -12,7 +12,7 @@ git clone https://github.com/zelvann/product-expire-note-api.git
 
 ### 2. Install dependencies
 ```
-cd product-expire-api
+cd product-expire-note-api
 npm install
 ```
 
